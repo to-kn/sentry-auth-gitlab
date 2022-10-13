@@ -11,22 +11,27 @@ from .views import FetchUser
 
 
 class GitLabOAuth2Provider(OAuth2Provider):
-    name = 'Gitlab'
-
+    access_token_url = ACCESS_TOKEN_URL
+    authorize_url = AUTHORIZE_URL
+    name = "Gitlab"
+    client_id = CLIENT_ID
+    client_secret = CLIENT_SECRET
+        
     def get_auth_pipeline(self):
         return [
-            OAuth2Login(AUTHORIZE_URL, client_id=CLIENT_ID, scope=SCOPE),
+            OAuth2Login(authorize_url=self.authorize_url, client_id=self.client_id, scope=SCOPE),
             OAuth2Callback(
-                access_token_url=ACCESS_TOKEN_URL,
-                client_id=CLIENT_ID, client_secret=CLIENT_SECRET,
+                access_token_url=self.access_token_url,
+                client_id=self.client_id,
+                client_secret=self.client_secret,
             ),
-            FetchUser()
+            FetchUser(),
         ]
 
     def get_refresh_token_url(self):
-        return ACCESS_TOKEN_URL
+        self.access_token_url
 
-    def build_config(self, config):
+    def build_config(self, state):
         return {}
 
     def build_identity(self, state):
