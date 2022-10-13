@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class Config(AppConfig):
-    name = "sentry.auth.providers.gitlab"
+    name = "auth_gitlab"
 
     def ready(self):
         from sentry.auth import register
